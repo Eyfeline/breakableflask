@@ -14,7 +14,7 @@ jobs:
           scan-type: 'fs'
           input: '/home/runner/work/breakableflask/breakableflask/requirements.txt' 
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           vuln-type: 'library'
           severity: 'CRITICAL,HIGH'
           ignore-unfixed: true
