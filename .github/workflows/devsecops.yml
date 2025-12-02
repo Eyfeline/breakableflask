@@ -4,9 +4,20 @@ jobs:
   Dependances:
     runs-on: ubuntu-latest
     steps:
-      - name: Dependances
+      - name: Récupérer le code
+        uses: actions/checkout@v3
+  
+      - name: Installer Trivy
         run: |
-          echo "ecrire ici le scrypt de contrôle des dépendances"
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_Linux-64bit.deb
+          sudo dpkg -i trivy_Linux-64bit.deb
+  
+      - name: Scan Trivy du fichier requirements.txt
+        run: |
+          echo "Scan de vulnérabilités Python avec Trivy"
+          trivy fs --scanners vuln --exit-code 1 --severity CRITICAL,HIGH .
   Dockerfile:
     runs-on: ubuntu-latest
     needs: Dependances
