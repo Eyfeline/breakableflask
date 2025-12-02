@@ -1,26 +1,24 @@
-FROM python:3.12-alpine
+FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
+# Dossier de travail
 WORKDIR /app
 
-# 🔧 AJOUT : paquets nécessaires pour compiler lxml
-RUN apk add --no-cache \
-    libxml2-dev \
-    libxslt-dev \
-    gcc \
-    musl-dev
-
+# Copie des dépendances et installation
 COPY requirements.txt .
+
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-COPY . /app
+# Copie du code de l'application
+COPY . .
 
-RUN adduser -D appuser \
-    && chown -R appuser /app
-USER appuser
+# Variables d'environnement Flask
+ENV FLASK_APP=main.py
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_RUN_PORT=4000
 
+# Port exposé par l'application
 EXPOSE 4000
+
+# Commande de lancement
 CMD ["python", "main.py"]
